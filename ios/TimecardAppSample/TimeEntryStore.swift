@@ -40,6 +40,11 @@ final class TimeEntryStore: ObservableObject {
         save()
     }
 
+    func remove(_ entry: TimeEntry) {
+        entries.removeAll { $0.id == entry.id }
+        save()
+    }
+
     func clear() {
         entries.removeAll()
         save()
