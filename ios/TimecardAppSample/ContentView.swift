@@ -8,6 +8,20 @@ enum AppTab: Hashable {
     case profile
 }
 
+enum AppTheme {
+    static let background = Color(red: 0.06, green: 0.07, blue: 0.10)
+    static let card = Color(red: 0.13, green: 0.15, blue: 0.20)
+    static let cardBorder = Color.white.opacity(0.08)
+    static let formField = Color(red: 0.17, green: 0.19, blue: 0.25)
+    static let pill = Color(red: 0.18, green: 0.21, blue: 0.28)
+    static let textPrimary = Color.white
+    static let textSecondary = Color.white.opacity(0.68)
+    static let accent = Color(red: 0.18, green: 0.49, blue: 0.95)
+    static let accentSoft = Color(red: 0.18, green: 0.49, blue: 0.95).opacity(0.2)
+    static let destructive = Color(red: 0.95, green: 0.36, blue: 0.40)
+    static let divider = Color.white.opacity(0.08)
+}
+
 struct ContentView: View {
     @StateObject private var store = TimeEntryStore()
     @State private var selectedTab: AppTab = .timecard
@@ -30,7 +44,7 @@ struct ContentView: View {
                 .tabItem { Label("Profile", systemImage: "person.crop.circle") }
                 .tag(AppTab.profile)
         }
-        .tint(Color.blue)
+        .tint(AppTheme.accent)
     }
 }
 
@@ -61,8 +75,10 @@ struct TimecardHomeView: View {
                             TextField("Alex Morgan", text: $employee)
                                 .textInputAutocapitalization(.words)
                                 .multilineTextAlignment(.trailing)
+                                .textFieldStyle(.plain)
+                                .foregroundColor(AppTheme.textPrimary)
                         }
-                        Divider()
+                        AppDivider()
 
                         FormRow(title: "Date *") {
                             DatePicker(
@@ -71,8 +87,9 @@ struct TimecardHomeView: View {
                                 displayedComponents: .date
                             )
                             .labelsHidden()
+                            .tint(AppTheme.accent)
                         }
-                        Divider()
+                        AppDivider()
 
                         FormRow(title: "Start time *") {
                             DatePicker(
@@ -81,8 +98,9 @@ struct TimecardHomeView: View {
                                 displayedComponents: .hourAndMinute
                             )
                             .labelsHidden()
+                            .tint(AppTheme.accent)
                         }
-                        Divider()
+                        AppDivider()
 
                         FormRow(title: "End time *") {
                             DatePicker(
@@ -91,22 +109,26 @@ struct TimecardHomeView: View {
                                 displayedComponents: .hourAndMinute
                             )
                             .labelsHidden()
+                            .tint(AppTheme.accent)
                         }
-                        Divider()
+                        AppDivider()
 
                         FormRow(title: "Break minutes") {
                             HStack(spacing: 8) {
                                 Text("\(breakMinutes)m")
-                                    .foregroundColor(.primary)
+                                    .foregroundColor(AppTheme.textPrimary)
                                 Stepper("", value: $breakMinutes, in: 0...180, step: 5)
                                     .labelsHidden()
+                                    .tint(AppTheme.accent)
                             }
                         }
-                        Divider()
+                        AppDivider()
 
                         FormRow(title: "Project or role") {
                             TextField("Fulfillment lead", text: $project)
                                 .multilineTextAlignment(.trailing)
+                                .textFieldStyle(.plain)
+                                .foregroundColor(AppTheme.textPrimary)
                         }
                     }
                 }
@@ -120,7 +142,7 @@ struct TimecardHomeView: View {
                     ZStack(alignment: .topLeading) {
                         if notes.isEmpty {
                             Text("Optional details about the shift")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(AppTheme.textSecondary)
                                 .padding(.top, 10)
                                 .padding(.leading, 14)
                         }
@@ -129,7 +151,9 @@ struct TimecardHomeView: View {
                             .frame(minHeight: 90)
                             .padding(8)
                             .scrollContentBackground(.hidden)
-                            .background(Color(.secondarySystemBackground))
+                            .background(AppTheme.formField)
+                            .foregroundColor(AppTheme.textPrimary)
+                            .tint(AppTheme.accent)
                             .cornerRadius(12)
                     }
                 }
@@ -159,7 +183,7 @@ struct TimecardHomeView: View {
             if !statusMessage.isEmpty {
                 Text(statusMessage)
                     .font(.footnote)
-                    .foregroundColor(statusIsError ? .red : .secondary)
+                    .foregroundColor(statusIsError ? AppTheme.destructive : AppTheme.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
 
@@ -175,18 +199,18 @@ struct TimecardHomeView: View {
                             selectedTab = .entries
                         }
                         .font(.subheadline.weight(.semibold))
-                        .foregroundColor(.blue)
+                        .foregroundColor(AppTheme.accent)
                     }
 
                     let recentEntries = Array(store.entries.prefix(3))
                     if recentEntries.isEmpty {
                         Text("No time entries yet.")
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppTheme.textSecondary)
                     } else {
                         ForEach(Array(recentEntries.enumerated()), id: \.element.id) { index, entry in
                             EntryCompactRow(entry: entry)
                             if index < recentEntries.count - 1 {
-                                Divider()
+                                AppDivider()
                             }
                         }
                     }
@@ -265,7 +289,7 @@ struct EntriesView: View {
             if store.entries.isEmpty {
                 Card {
                     Text("No time entries yet. Add one from the Timecard tab.")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             } else {
                 ForEach(store.entries) { entry in
@@ -294,11 +318,11 @@ struct ProfileView: View {
             Card {
                 VStack(spacing: 0) {
                     ProfileRow(label: "User ID", value: "cfe987033")
-                    Divider()
+                    AppDivider()
                     ProfileRow(label: "Email", value: "diana.lane@email.com")
-                    Divider()
+                    AppDivider()
                     ProfileRow(label: "Phone", value: "+1 602-539-4782")
-                    Divider()
+                    AppDivider()
                     ProfileRow(label: "Company", value: "Ultra Inc")
                 }
             }
@@ -310,17 +334,17 @@ struct ProfileView: View {
 
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                            .stroke(AppTheme.cardBorder, lineWidth: 1)
                             .frame(height: 140)
 
                         Text("Diana Stone")
                             .font(.system(size: 32, weight: .semibold, design: .serif))
-                            .foregroundColor(.blue)
+                            .foregroundColor(AppTheme.accent)
                     }
 
                     Button("Clear signature") {}
                         .font(.subheadline.weight(.semibold))
-                        .foregroundColor(.blue)
+                        .foregroundColor(AppTheme.accent)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -334,7 +358,7 @@ struct ScreenContainer<Content: View>: View {
 
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground)
+            AppTheme.background
                 .ignoresSafeArea()
 
             ScrollView {
@@ -344,6 +368,7 @@ struct ScreenContainer<Content: View>: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
+                .foregroundColor(AppTheme.textPrimary)
             }
         }
     }
@@ -356,6 +381,7 @@ struct AppHeader: View {
         ZStack {
             Text(title)
                 .font(.headline)
+                .foregroundColor(AppTheme.textPrimary)
 
             HStack {
                 Button(action: {}) {
@@ -365,7 +391,7 @@ struct AppHeader: View {
                     }
                 }
                 .font(.subheadline.weight(.semibold))
-                .foregroundColor(.blue)
+                .foregroundColor(AppTheme.accent)
 
                 Spacer()
 
@@ -374,7 +400,7 @@ struct AppHeader: View {
                         .rotationEffect(.degrees(90))
                         .font(.headline)
                 }
-                .foregroundColor(.primary)
+                .foregroundColor(AppTheme.textSecondary)
             }
         }
         .padding(.top, 8)
@@ -388,9 +414,13 @@ struct Card<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.systemBackground))
+            .background(AppTheme.card)
             .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 10, x: 0, y: 6)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(AppTheme.cardBorder, lineWidth: 1)
+            )
+            .shadow(color: Color.black.opacity(0.35), radius: 12, x: 0, y: 8)
     }
 }
 
@@ -401,9 +431,10 @@ struct FormRow<Content: View>: View {
     var body: some View {
         HStack(spacing: 12) {
             Text(title)
-                .foregroundColor(.secondary)
+                .foregroundColor(AppTheme.textSecondary)
             Spacer()
             content()
+                .foregroundColor(AppTheme.textPrimary)
         }
         .padding(.vertical, 10)
     }
@@ -424,27 +455,27 @@ struct SummaryPanel: View {
                     StatPill(label: "Overtime", value: TimeUtils.formattedHours(store.overtimeHours))
                 }
 
-                Divider()
+                AppDivider()
 
                 Text("Hours by employee")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(AppTheme.textSecondary)
 
                 let totals = store.employeeTotals()
                 if totals.isEmpty {
                     Text("No employee totals yet.")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 } else {
                     ForEach(Array(totals.enumerated()), id: \.element.name) { index, item in
                         HStack {
                             Text(item.name)
                             Spacer()
                             Text(TimeUtils.formattedHours(item.hours))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(AppTheme.textSecondary)
                         }
 
                         if index < totals.count - 1 {
-                            Divider()
+                            AppDivider()
                         }
                     }
                 }
@@ -464,7 +495,7 @@ struct EntryCard: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(entry.dateLabel)
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(AppTheme.textSecondary)
                         Text(entry.employee)
                             .font(.headline)
                     }
@@ -475,11 +506,12 @@ struct EntryCard: View {
                         Button(role: .destructive, action: onDelete) {
                             Image(systemName: "trash")
                         }
+                        .foregroundColor(AppTheme.destructive)
                     }
                 }
 
                 Text("\(entry.shiftLabel) | Break \(entry.breakMinutes)m")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(AppTheme.textSecondary)
 
                 Text("Hours: \(TimeUtils.formattedHours(entry.hours))")
                     .font(.subheadline)
@@ -487,13 +519,13 @@ struct EntryCard: View {
                 if !entry.project.isEmpty {
                     Text("Project: \(entry.project)")
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
 
                 if !entry.notes.isEmpty {
                     Text("Notes: \(entry.notes)")
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(AppTheme.textSecondary)
                 }
             }
         }
@@ -508,7 +540,7 @@ struct EntryCompactRow: View {
             HStack {
                 Text(entry.dateLabel)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(AppTheme.textSecondary)
                 Spacer()
                 Text(entry.employee)
                     .font(.subheadline.weight(.semibold))
@@ -516,7 +548,7 @@ struct EntryCompactRow: View {
 
             Text(entry.shiftLabel)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(AppTheme.textSecondary)
 
             Text("Hours: \(TimeUtils.formattedHours(entry.hours))")
                 .font(.footnote)
@@ -531,13 +563,13 @@ struct ProfileRow: View {
     var body: some View {
         HStack {
             Text(label)
-                .foregroundColor(.secondary)
+                .foregroundColor(AppTheme.textSecondary)
             Spacer()
             Text(value)
                 .multilineTextAlignment(.trailing)
-                .foregroundColor(.primary)
+                .foregroundColor(AppTheme.textPrimary)
             Image(systemName: "chevron.right")
-                .foregroundColor(.secondary)
+                .foregroundColor(AppTheme.textSecondary)
         }
         .padding(.vertical, 12)
     }
@@ -551,14 +583,22 @@ struct StatPill: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(label)
                 .font(.caption)
-                .foregroundColor(.secondary)
+                .foregroundColor(AppTheme.textSecondary)
             Text(value)
                 .font(.headline)
         }
         .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground))
+        .background(AppTheme.pill)
         .cornerRadius(12)
+    }
+}
+
+struct AppDivider: View {
+    var body: some View {
+        Rectangle()
+            .fill(AppTheme.divider)
+            .frame(height: 1)
     }
 }
 
@@ -569,9 +609,9 @@ struct PrimaryActionButtonStyle: ButtonStyle {
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 14)
-            .background(Color.blue.opacity(configuration.isPressed ? 0.85 : 1))
+            .background(AppTheme.accent.opacity(configuration.isPressed ? 0.85 : 1))
             .cornerRadius(14)
-            .shadow(color: Color.blue.opacity(0.25), radius: 8, x: 0, y: 6)
+            .shadow(color: AppTheme.accent.opacity(0.35), radius: 8, x: 0, y: 6)
     }
 }
 
@@ -581,12 +621,12 @@ struct SecondaryPillButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.subheadline.weight(.semibold))
-            .foregroundColor(isDestructive ? .red : .blue)
+            .foregroundColor(isDestructive ? AppTheme.destructive : AppTheme.accent)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)
             .background(
-                (isDestructive ? Color.red : Color.blue)
-                    .opacity(configuration.isPressed ? 0.2 : 0.12)
+                (isDestructive ? AppTheme.destructive : AppTheme.accent)
+                    .opacity(configuration.isPressed ? 0.25 : 0.16)
             )
             .cornerRadius(999)
     }
