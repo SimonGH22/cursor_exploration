@@ -35,6 +35,13 @@ final class TimeEntryStore: ObservableObject {
         save()
     }
 
+    func update(_ entry: TimeEntry) {
+        guard let index = entries.firstIndex(where: { $0.id == entry.id }) else { return }
+        entries[index] = entry
+        sortEntries()
+        save()
+    }
+
     func remove(at offsets: IndexSet) {
         entries.remove(atOffsets: offsets)
         save()
