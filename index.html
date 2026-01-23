@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timecard App Sample</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <h1>Timecard App Sample</h1>
+        <p class="tagline">Track hours, breaks, and weekly totals.</p>
+      </header>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Add time entry</h2>
+          <p class="help-text">All fields marked with * are required.</p>
+        </div>
+        <form id="timecard-form" novalidate>
+          <div class="grid">
+            <label>
+              Employee name *
+              <input
+                type="text"
+                name="employee"
+                id="employee"
+                placeholder="Alex Morgan"
+                required
+              />
+            </label>
+
+            <label>
+              Date *
+              <input type="date" name="date" id="entry-date" required />
+            </label>
+
+            <label>
+              Start time *
+              <input type="time" name="start" id="start-time" required />
+            </label>
+
+            <label>
+              End time *
+              <input type="time" name="end" id="end-time" required />
+            </label>
+
+            <label>
+              Break (minutes)
+              <input
+                type="number"
+                name="break"
+                id="break-minutes"
+                min="0"
+                step="5"
+                placeholder="30"
+              />
+            </label>
+
+            <label>
+              Project or role
+              <input
+                type="text"
+                name="project"
+                id="project"
+                placeholder="Fulfillment lead"
+              />
+            </label>
+          </div>
+
+          <label class="full-width">
+            Notes
+            <textarea
+              name="notes"
+              id="notes"
+              rows="3"
+              placeholder="Optional details about the shift"
+            ></textarea>
+          </label>
+
+          <div class="actions">
+            <button type="submit" class="primary">Add entry</button>
+            <button type="button" id="add-sample" class="ghost">
+              Add sample data
+            </button>
+            <button type="button" id="export-csv" class="ghost">
+              Export CSV
+            </button>
+            <button type="button" id="clear-all" class="ghost danger">
+              Clear all
+            </button>
+          </div>
+          <div id="form-status" class="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="panel summary">
+        <h2>Summary</h2>
+        <div class="summary-grid">
+          <div class="summary-card">
+            <p class="label">Entries</p>
+            <p class="value" id="summary-entries">0</p>
+          </div>
+          <div class="summary-card">
+            <p class="label">Total hours</p>
+            <p class="value" id="summary-hours">0.00</p>
+          </div>
+          <div class="summary-card">
+            <p class="label">Overtime (40h+)</p>
+            <p class="value" id="summary-overtime">0.00</p>
+          </div>
+        </div>
+        <div class="employee-summary">
+          <h3>Hours by employee</h3>
+          <ul id="employee-totals" class="totals-list"></ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Entries</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Employee</th>
+                <th>Shift</th>
+                <th>Break</th>
+                <th>Hours</th>
+                <th>Project</th>
+                <th>Notes</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="entries-body"></tbody>
+          </table>
+        </div>
+        <p id="empty-state" class="empty-state">
+          No time entries yet. Add one above to get started.
+        </p>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

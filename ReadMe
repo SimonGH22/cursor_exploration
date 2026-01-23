@@ -1,1 +1,32 @@
-this is a test file, Readme could be added later
+Timecard App Sample
+===================
+
+This repo includes a lightweight web sample plus an iOS SwiftUI sample.
+
+Features
+--------
+- Add time entries with start/end times and breaks
+- Automatic daily hours plus weekly overtime estimate
+- Per-employee totals
+- Local storage persistence (browser localStorage or iOS UserDefaults)
+- Export entries to CSV
+- Sample data to try the UI quickly
+
+Web Usage
+---------
+1. Open `index.html` in your browser.
+2. Fill out the "Add time entry" form and submit.
+3. Use the action buttons to export, clear, or load sample data.
+
+iOS Usage (SwiftUI)
+-------------------
+1. Open Xcode and create a new iOS App project named `TimecardAppSample`.
+2. Replace the generated `ContentView.swift` and `TimecardAppSampleApp.swift`
+   with the files in `ios/TimecardAppSample`.
+3. Add `TimeEntry.swift` and `TimeEntryStore.swift` to the project.
+4. Build and run on a simulator or device.
+
+Notes
+-----
+These are front-end-only samples intended for demos and learning. Data is
+saved locally on the device (localStorage or UserDefaults).
