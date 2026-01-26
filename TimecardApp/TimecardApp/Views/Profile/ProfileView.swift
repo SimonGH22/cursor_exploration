@@ -9,6 +9,7 @@ struct ProfileView: View {
     @State private var showingNotifications = false
     @State private var showingGallery = false
     @State private var showingSignature = false
+    @State private var showingSiteInfo = false
     @State private var geolocationEnabled = true
     @State private var showingLogoutAlert = false
     
@@ -72,8 +73,16 @@ struct ProfileView: View {
                                     icon: "photo.on.rectangle.angled",
                                     title: "Gallery",
                                     subtitle: "View your photos",
-                                    showDivider: false,
                                     action: { showingGallery = true }
+                                )
+                                .padding(.horizontal, AppSpacing.md)
+                                
+                                MenuRow(
+                                    icon: "building.2.fill",
+                                    title: "Site Information",
+                                    subtitle: "View site details and rules",
+                                    showDivider: false,
+                                    action: { showingSiteInfo = true }
                                 )
                                 .padding(.horizontal, AppSpacing.md)
                             }
@@ -155,6 +164,9 @@ struct ProfileView: View {
         }
         .sheet(isPresented: $showingSignature) {
             SignatureView()
+        }
+        .fullScreenCover(isPresented: $showingSiteInfo) {
+            SiteInformationView()
         }
         .alert("Logout", isPresented: $showingLogoutAlert) {
             Button("Cancel", role: .cancel) { }
